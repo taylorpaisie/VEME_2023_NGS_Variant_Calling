@@ -20,9 +20,9 @@
     <figcaption>Variant Calling Workflow</figcaption>
 </figure>
 	
-1. Downloading SRA files:
-	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/007/SRR1972917/SRR1972917_1.fastq.gz`
-	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/007/SRR1972917/SRR1972917_2.fastq.gz`
+1. Downloading SRA files:  
+	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/007/SRR1972917/SRR1972917_1.fastq.gz` 
+	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/007/SRR1972917/SRR1972917_2.fastq.gz`  
 	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/008/SRR1972918/SRR1972918_1.fastq.gz`
 	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/008/SRR1972918/SRR1972918_2.fastq.gz`
 	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/009/SRR1972919/SRR1972919_1.fastq.gz`
@@ -31,9 +31,9 @@
 	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/000/SRR1972920/SRR1972920_2.fastq.gz`
 	
 2. Lets take a look at one of our fastq files:
-	* In order to view our the fastq file, we must decompress it:
+	* In order to view our the fastq file, we must decompress it:  
 		`$ gunzip SRR1972917_1.fastq.gz`
-	* We can view the first complete read in one of the files our dataset by using head to look at the first four lines:
+	* We can view the first complete read in one of the files our dataset by using head to look at the first four lines:  
 		`$ head -n 4 SRR1972917_1.fastq`
 
 
@@ -48,6 +48,3 @@
 ### 5. Variant Calling
 ### 6. Visualizing the Results
 ### 7. Optional (if we have time): Automating Variant Calling Workflow
-
-
-
