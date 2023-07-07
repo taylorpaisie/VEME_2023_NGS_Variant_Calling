@@ -191,12 +191,65 @@ TrimmomaticPE: Completed successfully``
     `$ cd ../trimmed_fastq`  
     `$ ls -al`  
 
-
+5. Lets rerun FastQC on the trimmed fastq files  
+    `$ fastq *trim.fastq.gz`
 
 
 
 
 ### 4. Reference Based Mapping  
+
+1. Aligning to a reference genome
+    * We perform read alignment or mapping to determine where in the genome our reads originated from  
+    * There are a number of tools to choose from and, while there is no gold standard, there are some tools that are better suited for particular NGS analyses  
+    * We will be using the Burrows Wheeler Aligner (BWA), which is a software package for mapping low-divergent sequences against a large reference genome  
+    * The alignment process consists of two steps:  
+        * Indexing the reference genome  
+        * Aligning the reads to the reference genome  
+
+
+2. Downloading reference genome  
+   * Navigate to NCBI and search for GenBank accession `AF086833` and download fasta file  
+    `$ mkdir -p data/ref_genome`  
+    `$ cd data/ref_genome`  
+
+3. Create directories for the results that will be generated as part of this workflow    
+    * We can do this in a single line of code, because mkdir can accept multiple new directory names as input  
+    `$ mkdir -p results/sam results/bam results/bcf results/vcf`  
+
+4. Index the reference genome  
+    * Our first step is to index the reference genome for use by BWA  
+    * Indexing allows the aligner to quickly find potential alignment sites for query sequences in a genome, which saves time during alignment  
+    * Indexing the reference only has to be run once  
+    * The only reason you would want to create a new index is if you are working with a different reference genome or you are using a different tool for alignment  
+    `$ bwa index AF086833.fasta`  
+
+5. Align reads to the reference genome  
+    * The alignment process consists of choosing an appropriate reference genome to map our reads against and then deciding on an aligner  
+    * We will use the BWA-MEM algorithm, which is the latest and is generally recommended for high-quality queries as it is faster and more accurate  
+    `$ bwa mem data/ref_genome/AF086833.fasta data/trimmed_fastq/SRR1972917_1.trim.fastq.gz data/trimmed_fastq/SRR1972917_2.trim.fastq.gz > results/sam/SRR1972917.aligned.sam`  
+
+    * The SAM file, is a tab-delimited text file that contains information for each individual read and its alignment to the genome  
+    * The compressed binary version of SAM is called a BAM file  
+    * We use this version to reduce size and to allow for indexing, which enables efficient random access of the data contained within the file  
+    * The file begins with a header, which is optional  
+    * The header is used to describe the source of data, reference sequence, method of alignment, etc., this will change depending on the aligner being used  
+    * Following the header is the alignment section  
+    * Each line that follows corresponds to alignment information for a single read  
+    * Each alignment line has 11 mandatory fields for essential mapping information and a variable number of other fields for aligner specific information  
+    * An example entry from a SAM file is displayed below with the different fields highlighted  
+  
+6. Convert SAM file to BAM format  
+    `$ samtools view -S -b results/sam/SRR1972917.aligned.sam > results/bam/SRR1972917.aligned.bam`  
+
+7. Sort BAM file by coordinates  
+    `$ samtools sort -o results/bam/SRR1972917.aligned.sorted.bam results/bam/SRR1972917.aligned.bam`   
+
+
+
+
+
+
 
 
 
