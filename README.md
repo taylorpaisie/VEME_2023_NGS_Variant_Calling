@@ -245,15 +245,95 @@ TrimmomaticPE: Completed successfully``
 7. Sort BAM file by coordinates  
     `$ samtools sort -o results/bam/SRR1972917.aligned.sorted.bam results/bam/SRR1972917.aligned.bam`   
 
-
-
-
-
-
-
+    * Lets take a look at the statistics in our BAM file:  
+    `$ samtools flagstat results/bam/SRR1972917.aligned.sorted.bam`  
 
 
 
 ### 5. Variant Calling
+
+* A variant call is a conclusion that there is a nucleotide difference vs. some reference at a given position in an individual genome or transcriptome, often referred to as a Single Nucleotide Variant (SNV)  
+* The call is usually accompanied by an estimate of variant frequency and some measure of confidence  
+* Similar to other steps in this workflow, there are a number of tools available for variant calling  
+* We will be using bcftools, but there are a few things we need to do before actually calling the variants  
+
+1. Calculate the read coverage of positions in the genome  
+   `$ bcftools mpileup -O b -o results/bcf/SRR1972917_raw.bcf -f data/ref_genome/AF086833.fasta results/bam/SRR1972917.aligned.sorted.bam `  
+
+2. Detect the single nucleotide variants (SNVs)  
+    * Identify SNVs using bcftools call. We have to specify ploidy with the flag `--ploidy`, which is one for the haploid E. coli. `-m` allows for multiallelic and rare-variant calling, `-v` tells the program to output variant sites only (not every site in the genome), and `-o` specifies where to write the output file:  
+    `$ bcftools call --ploidy 1 -m -v -o results/vcf/SRR1972917_variants.vcf results/bcf/SRR1972917_raw.bcf`   
+
+3. Filter and report the SNV variants in variant calling format (VCF)
+    * Filter the SNVs for the final output in VCF format, using vcfutils.pl:  
+    `$ vcfutils.pl varFilter results/vcf/SRR1972917_variants.vcf  > results/vcf/SRR1972917_final_variants.vcf`  
+
+4. Explore the VCF format
+    `$ less -S results/vcf/SRR1972917_final_variants.vcf`  
+
+    * You will see the header (which describes the format), the time and date the file was created, the version of bcftools that was used, the command line parameters used, and some additional information  
+    * The first few columns represent the information we have about a predicted variation:  
+    <figure>
+    <img src="vcf_format1.png" width="500" height="300">
+    </figure>
+
+    * The last two columns contain the genotypes and can be tricky to decode:  
+    <figure>
+    <img src="vcf_format2.png" width="300" height="100">
+    </figure>
+
+    * For our file, the metrics presented are GT:PL:GQ:  
+    <figure>
+    <img src="vcf_format3.png" width="500" height="300">
+    </figure>
+
+
+
+
+
 ### 6. Visualizing the Results
-### 7. Optional (if we have time): Automating Variant Calling Workflow
+* It is often instructive to look at your data in a genome browser  
+* Visualization will allow you to get a “feel” for the data, as well as detecting abnormalities and problems  
+* Also, exploring the data in such a way may give you ideas for further analyses  
+* As such, visualization tools are useful for exploratory analysis  
+* We will describe two different tools for visualization: a light-weight command-line based one and the Broad Institute’s Integrative Genomics Viewer (IGV) which requires software installation and transfer of files
+1. In order for us to visualize the alignment files, we will need to index the BAM file using samtools:  
+    `$ samtools index results/bam/SRR1972917.aligned.sorted.bam`  
+2. Viewing with `tview`
+    * In order to visualize our mapped reads, we use tview, giving it the sorted bam file and the reference file:  
+    `$ samtools tview results/bam/SRR1972917.aligned.sorted.bam data/ref_genome/AF086833.fasta`  
+
+    * The first line of output shows the genome coordinates in our reference genome. The second line shows the reference genome sequence  
+    * The third line shows the consensus sequence determined from the sequence reads. 
+    * A `.` indicates a match to the reference sequence, so we can see that the consensus from our sample matches the reference in most locations   
+    * If that was not the case, we should probably reconsider our choice of reference  
+    * Below the horizontal line, we can see all of the reads in our sample aligned with the reference genome  
+    * Only positions where the called base differs from the reference are shown  
+    * You can use the arrow keys on your keyboard to scroll or type `?` for a help menu   
+    * To navigate to a specific position, type `g`  
+    * A dialogue box will appear  
+    * In this box, type the name of the “chromosome” followed by a colon and the position of the variant you would like to view (e.g. for this sample, type CP000819.1:50 to view the 50th base. Type `Ctrl^C` or `q` to exit tview  
+  
+3. Viewing with IGV
+    * IGV is a stand-alone browser, which has the advantage of being installed locally and providing fast access. Web-based genome browsers, like Ensembl or the UCSC browser, are slower, but provide more functionality  
+    * They not only allow for more polished and flexible visualization, but also provide easy access to a wealth of annotations and external data sources  
+    * This makes it straightforward to relate your data with information about repeat regions, known genes, epigenetic features or areas of cross-species conservation, to name just a few  
+  
+    1. Open IGV  
+    2. Load our reference genome file (AF086833.fasta) into IGV using the “Load Genomes from File…” option under the “Genomes” pull-down menu  
+    3. Load our BAM file (SRR1972917.aligned.sorted.bam) using the “Load from File…” option under the “File” pull-down menu  
+    4. Do the same with our VCF file (SRR1972917_final_variants.vcf)  
+
+    <figure>
+    <img src="igv_picture.png" width="500" height="300">
+    </figure>
+
+
+    * There should be two tracks: one coresponding to our BAM file and the other for our VCF file  
+    * In the VCF track, each bar across the top of the plot shows the allele fraction for a single locus  
+    * The second bar shows the genotypes for each locus in each sample  
+    * We only have one sample called here, so we only see a single line  
+    * Dark blue = heterozygous, Cyan = homozygous variant, Grey = reference  
+    * Filtered entries are transparent  
+    * Zoom in to inspect variants you see in your filtered VCF file to become more familiar with IGV  
+    * See how quality information corresponds to alignment information at those loci  
