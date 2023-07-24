@@ -3,6 +3,12 @@
 ## Taylor K. Paisie
 ### `https://taylorpaisie.github.io/VEME_NGS_Variant_Calling/`
 
+#### Directory visualization
+<figure>
+    <img src="variant_calling_Graph.svg" width="400" height="300">
+    <figcaption>How the structure of our directories should look</figcaption>
+</figure>
+
 ### 1. Background and Metadata
 #### What is Variant (or SNP) Calling?
 #### Variant calling is the process of identifying and cataloging the differences between the observed sequencing reads and a reference genome
