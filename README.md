@@ -258,10 +258,10 @@ TrimmomaticPE: Completed successfully``
 
 ### 5. Variant Calling
 
-* A variant call is a conclusion that there is a nucleotide difference vs. some reference at a given position in an individual genome or transcriptome, often referred to as a Single Nucleotide Variant (SNV)  
-* The call is usually accompanied by an estimate of variant frequency and some measure of confidence  
-* Similar to other steps in this workflow, there are a number of tools available for variant calling  
-* We will be using bcftools, but there are a few things we need to do before actually calling the variants  
+#### A variant call is a conclusion that there is a nucleotide difference vs. some reference at a given position in an individual genome or transcriptome, often referred to as a Single Nucleotide Variant (SNV)  
+#### The call is usually accompanied by an estimate of variant frequency and some measure of confidence  
+#### Similar to other steps in this workflow, there are a number of tools available for variant calling  
+#### We will be using bcftools, but there are a few things we need to do before actually calling the variants  
 
 1. Calculate the read coverage of positions in the genome  
    `$ bcftools mpileup -O b -o results/bcf/SRR1972917_raw.bcf -f data/ref_genome/KJ660346.2.fasta results/bam/SRR1972917.aligned.sorted.bam `  
@@ -280,17 +280,17 @@ TrimmomaticPE: Completed successfully``
     * You will see the header (which describes the format), the time and date the file was created, the version of bcftools that was used, the command line parameters used, and some additional information  
     * The first few columns represent the information we have about a predicted variation:  
     <figure>
-    <img src="vcf_format1.png" width="500" height="300">
+    <img src="vcf_format1.png" width="700" height="300">
     </figure>
 
     * The last two columns contain the genotypes and can be tricky to decode:  
     <figure>
-    <img src="vcf_format2.png" width="300" height="100">
+    <img src="vcf_format2.png" width="500" height="100">
     </figure>
 
     * For our file, the metrics presented are GT:PL:GQ:  
     <figure>
-    <img src="vcf_format3.png" width="500" height="300">
+    <img src="vcf_format3.png" width="500" height=200">
     </figure>
 
 
@@ -298,11 +298,12 @@ TrimmomaticPE: Completed successfully``
 
 
 ### 6. Visualizing the Results
-* It is often instructive to look at your data in a genome browser  
-* Visualization will allow you to get a “feel” for the data, as well as detecting abnormalities and problems  
-* Also, exploring the data in such a way may give you ideas for further analyses  
-* As such, visualization tools are useful for exploratory analysis  
-* We will describe two different tools for visualization: a light-weight command-line based one and the Broad Institute’s Integrative Genomics Viewer (IGV) which requires software installation and transfer of files
+#### It is often instructive to look at your data in a genome browser  
+#### Visualization will allow you to get a “feel” for the data, as well as detecting abnormalities and problems  
+#### Also, exploring the data in such a way may give you ideas for further analyses  
+#### As such, visualization tools are useful for exploratory analysis  
+#### We will describe two different tools for visualization: a light-weight command-line based one and the Broad Institute’s Integrative Genomics Viewer (IGV) which requires software installation and transfer of files
+
 1. In order for us to visualize the alignment files, we will need to index the BAM file using samtools:  
     `$ samtools index results/bam/SRR1972917.aligned.sorted.bam`  
 2. Viewing with `tview`
@@ -321,7 +322,7 @@ TrimmomaticPE: Completed successfully``
     * In this box, type the name of the “chromosome” followed by a colon and the position of the variant you would like to view (e.g. for this sample, type CP000819.1:50 to view the 50th base. Type `Ctrl^C` or `q` to exit tview  
   
 3. Viewing with IGV
-    * IGV is a stand-alone browser, which has the advantage of being installed locally and providing fast access. Web-based genome browsers, like Ensembl or the UCSC browser, are slower, but provide more functionality  
+    #### IGV is a stand-alone browser, which has the advantage of being installed locally and providing fast access. Web-based genome browsers, like Ensembl or the UCSC browser, are slower, but provide more functionality  
     * They not only allow for more polished and flexible visualization, but also provide easy access to a wealth of annotations and external data sources  
     * This makes it straightforward to relate your data with information about repeat regions, known genes, epigenetic features or areas of cross-species conservation, to name just a few  
   
@@ -343,3 +344,187 @@ TrimmomaticPE: Completed successfully``
     * Filtered entries are transparent  
     * Zoom in to inspect variants you see in your filtered VCF file to become more familiar with IGV  
     * See how quality information corresponds to alignment information at those loci  
+
+
+
+### 7. Automating a Variant Calling Workflow
+
+#### You wrote a simple shell script eariler in this tutorial
+#### Shell scripts can be much more complicated than that and can be used to perform a large number of operations on one or many files  
+#### This saves you the effort of having to type each of those commands over for each of your data files and makes your work less error-prone and more reproducible  
+#### For example, the variant calling workflow we just carried out had about eight steps where we had to type a command into our terminal   
+#### If we wanted to do this for all eight of our data files, that would be forty-eight steps  
+#### If we had 50 samples, it would be 400 steps
+#### We have also used for loops earlier to iterate one or two commands over multiple input files  
+#### In these for loops, the filename was defined as a variable in the for statement, which enables you to run the loop on multiple files  
+
+
+#### Running Trimmomatic on all samples:
+
+```
+$ for infile in *_1.fastq.gz
+    do
+        base=$(basename ${infile} _1.fastq.gz)  
+        trimmomatic PE ${infile} ${base}_2.fastq.gz  
+        ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz  
+        ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz  
+        SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15   
+    done
+``` 
+
+* Within the Bash shell you can create variables at any time (as we did above, and during the `for` loop lesson)  
+* Assign any name and the value using the assignment operator: `=`  
+* You can check the current definition of your variable by typing into your script: echo `$variable_name`  
+
+#### Notice that in this for loop, we used two variables, `infile`, which was defined in the for statement, and `base`, which was created from the filename during each iteration of the loop  
+
+#### We can extend these principles to the entire variant calling workflow. 
+#### To do this, we will take all of the individual commands that we wrote before, put them into a single file, add variables so that the script knows to iterate through our input files and write to the appropriate output files
+
+#### Download automated variant calling script:
+
+`$ mkdir scripts`  
+`$ cd scripts/`  
+`$ curl -O https://datacarpentry.org/wrangling-genomics/files/run_variant_calling.sh` 
+
+#### Let's view the bash script we just downloaded:  
+`$ less run_variant_calling.sh`  
+
+
+#### Our variant calling workflow has the following steps:  
+1. Index the reference genome for use by bwa and samtools  
+2. Align reads to reference genome  
+3. Convert the format of the alignment to sorted BAM, with some intermediate steps  
+4. Calculate the read coverage of positions in the genome  
+5. Detect the SNVs  
+6. Filter and report the SNVs in VCF  
+
+
+#### Script should look like this:  
+
+```
+set -e
+cd ~/dc_workshop/results
+
+genome=~/dc_workshop/data/ref_genome/ecoli_rel606.fasta
+
+bwa index $genome
+
+mkdir -p sam bam bcf vcf
+
+for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
+    do
+    echo "working with file $fq1"
+
+    base=$(basename $fq1 _1.trim.sub.fastq)
+    echo "base name is $base"
+
+    fq1=~/dc_workshop/data/trimmed_fastq_small/${base}_1.trim.sub.fastq
+    fq2=~/dc_workshop/data/trimmed_fastq_small/${base}_2.trim.sub.fastq
+    sam=~/dc_workshop/results/sam/${base}.aligned.sam
+    bam=~/dc_workshop/results/bam/${base}.aligned.bam
+    sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
+    raw_bcf=~/dc_workshop/results/bcf/${base}_raw.bcf
+    variants=~/dc_workshop/results/vcf/${base}_variants.vcf
+    final_variants=~/dc_workshop/results/vcf/${base}_final_variants.vcf 
+
+    bwa mem $genome $fq1 $fq2 > $sam
+    samtools view -S -b $sam > $bam
+    samtools sort -o $sorted_bam $bam
+    samtools index $sorted_bam
+    bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam
+    bcftools call --ploidy 1 -m -v -o $variants $raw_bcf 
+    vcfutils.pl varFilter $variants > $final_variants
+   
+    done
+```
+
+#### We change our working directory so that we can create new results subdirectories in the right location  
+
+`$ cd ../results`   
+
+#### Next we tell our script where to find the reference genome by assigning the genome variable to the path to our reference genome:  
+
+`$ genome=../data/ref_genome/KJ660346.2.fasta`  
+
+#### Now we want to index the reference genome for BWA:
+
+`$ bwa index $genome`  
+
+#### We already have all the directories in `results` that are needed
+
+
+#### What is in our automated variant calling script?
+* We will use a loop to run the variant calling workflow on each of our FASTQ files   
+* The full list of commands within the loop will be executed once for each of the FASTQ files in the data/trimmed_fastq/ directory   
+* We will include a few echo statements to give us status updates on our progress  
+* The first thing we do is assign the name of the FASTQ file we are currently working with to a variable called fq1 and tell the script to echo the filename back to us so we can check which file we are on  
+
+```
+for fq1 in ../data/trimmed_fastq/*_1.trim.fastq.gz
+    do
+    echo "working with file $fq1"
+```  
+
+* We then extract the base name of the file (excluding the path and .fastq.gz extension) and assign it to a new variable called base  
+
+```
+base=$(basename $fq1 _1.trim.fastq.gz)
+echo "base name is $base"
+```
+
+* We can use the base variable to access both the base_1.fastq.gz and base_2.fastq.gz input files, and create variables to store the names of our output files   
+* This makes the script easier to read because we do not need to type out the full name of each of the files: instead, we use the base variable, but add a different extension (e.g. .sam, .bam) for each file produced by our workflow  
+
+```
+# input fastq files
+fq1=../data/trimmed_fastq/${base}_1.trim.fastq.gz
+fq2=../data/trimmed_fastq/${base}_2.trim.fastq.gz
+    
+# output files
+sam=sam/${base}.aligned.sam
+bam=bam/${base}.aligned.bam
+sorted_bam=bam/${base}.aligned.sorted.bam
+raw_bcf=bcf/${base}_raw.bcf
+variants=bcf/${base}_variants.vcf
+final_variants=vcf/${base}_final_variants.vcf    
+```
+
+#### Now to the actual steps of the workflow:
+
+1. Align the reads to the reference genome and output a .sam file:
+
+`$ bwa mem $genome $fq1 $fq2 > $sam`  
+
+2. Convert the SAM file to BAM format:  
+
+`$ samtools view -S -b $sam > $bam`  
+
+3. Sort the BAM file:  
+
+`$ samtools sort -o $sorted_bam $bam`  
+
+4. Index the BAM file for display purposes:  
+
+`$ samtools index $sorted_bam`  
+
+5. Calculate the read coverage of positions in the genome:  
+
+`bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam`  
+
+6. Call SNVs with bcftools:  
+
+`bcftools call --ploidy 1 -m -v -o $variants $raw_bcf`  
+
+7. Filter and report the SNVs in a VCF:  
+
+`vcfutils.pl varFilter $variants > $final_variants`  
+
+
+#### Time to run the script!
+
+`$ bash run_variant_calling.sh`  
+
+#### Now your automated variant calling script should be running!!!
+#### Tip:  using echo statements within your scripts is a great way to get an automated progress update  
+
