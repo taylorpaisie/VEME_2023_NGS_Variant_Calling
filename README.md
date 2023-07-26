@@ -510,15 +510,15 @@ final_variants=vcf/${base}_final_variants.vcf
 
 5. Calculate the read coverage of positions in the genome:  
 
-`bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam`  
+`$ bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam`  
 
 6. Call SNVs with bcftools:  
 
-`bcftools call --ploidy 1 -m -v -o $variants $raw_bcf`  
+`$ bcftools call --ploidy 1 -m -v -o $variants $raw_bcf`  
 
 7. Filter and report the SNVs in a VCF:  
 
-`vcfutils.pl varFilter $variants > $final_variants`  
+`$ vcfutils.pl varFilter $variants > $final_variants`  
 
 
 #### Time to run the script!
