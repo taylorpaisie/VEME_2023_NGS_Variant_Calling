@@ -316,24 +316,24 @@ $ for infile in *_1.fastq.gz
     * Filter the SNVs for the final output in VCF format, using vcfutils.pl:  
     `$ vcfutils.pl varFilter results/vcf/SRR1972917_variants.vcf  > results/vcf/SRR1972917_final_variants.vcf`  
 
-4. Explore the VCF format
+4. Explore the VCF format:  
     `$ less -S results/vcf/SRR1972917_final_variants.vcf`  
 
     * You will see the header (which describes the format), the time and date the file was created, the version of bcftools that was used, the command line parameters used, and some additional information  
     * The first few columns represent the information we have about a predicted variation:  
-    <figure>
+<figure>
     <img src="vcf_format1.png" width="700" height="300">
-    </figure>
+</figure>
 
-    * The last two columns contain the genotypes and can be tricky to decode:  
-    <figure>
+   * The last two columns contain the genotypes and can be tricky to decode:  
+<figure>
     <img src="vcf_format2.png" width="500" height="100">
-    </figure>
+</figure>
 
-    * For our file, the metrics presented are GT:PL:GQ:  
-    <figure>
+   * For our file, the metrics presented are GT:PL:GQ:  
+<figure>
     <img src="vcf_format3.png" width="500" height=200">
-    </figure>
+</figure>
 
 
 
