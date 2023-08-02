@@ -40,7 +40,7 @@
 	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/000/SRR1972920/SRR1972920_1.fastq.gz`  
 	`$ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR197/000/SRR1972920/SRR1972920_2.fastq.gz`  
 	
-2. Lets take a look at one of our fastq files:
+2. Let's take a look at one of our fastq files:
 	* In order to view our the fastq file, we must decompress it:  
 		`$ gunzip SRR1972917_1.fastq.gz`
 	* We can view the first complete read in one of the files our dataset by using head to look at the first four lines:  
@@ -64,7 +64,10 @@ Quality encoding: !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJ
              |         |         |         |         |  
 Quality score: 01........11........21........31........41
 ```
-    
+
+* Compress Fastq file again:  
+
+`$ gzip SRR1972917_1.fastq`  
 
 1. Assessing read quality using FastQC
     * FastQC has a number of features which can give you a quick impression of any problems your data may have, so you can take these issues into consideration before moving forward with your analyses   
@@ -209,7 +212,7 @@ $ for infile in *_1.fastq.gz
         ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz \  
         SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15   
     done
-    
+
 ```
 
 
