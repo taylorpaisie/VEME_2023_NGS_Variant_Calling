@@ -332,7 +332,7 @@ $ for infile in *_1.fastq.gz
 
    * For our file, the metrics presented are GT:PL:GQ:  
 <figure>
-    <img src="vcf_format3.png" width="500" height=200">
+    <img src="vcf_format3.png" width="500" height="200">
 </figure>
 
 
