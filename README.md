@@ -237,7 +237,7 @@ $ for infile in *_1.fastq.gz
     `$ ls -al`  
 
 4. Lets rerun FastQC on the trimmed fastq files  
-    `$ fastq *trim.fastq.gz`
+    `$ fastqc *trim.fastq.gz`
 
 
 
