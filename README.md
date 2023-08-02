@@ -118,10 +118,10 @@ application/gzip
    * We want to keep our data files and our results files separate, so we will move these output files into a new directory within our results/ directory  
     
     `$ cd ~/variant_calling`  
-    `$ mkdir results/fastqc_untrimmed_reads`  
-    `$ mv *.zip results/fastqc_untrimmed_reads`  
-    `$ mv *.html results/fastqc_untrimmed_reads`  
-    `$ cd results/fastqc_untrimmed_reads`  
+    `$ mkdir -p results/fastqc_untrimmed_reads`  
+    `$ mv ~/variant_calling/data/untrimmed_fastq/*.zip ~/variant_calling/results/fastqc_untrimmed_reads`  
+    `$ mv ~/variant_calling/data/untrimmed_fastq/*.html ~/variant_calling/results/fastqc_untrimmed_reads`  
+    `$ cd ~/variant_calling/results/fastqc_untrimmed_reads`  
 
    * We can now open the .html file to view the FastQC results:  
 
