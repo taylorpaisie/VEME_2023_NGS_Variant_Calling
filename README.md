@@ -255,7 +255,9 @@ $ for infile in *_1.fastq.gz
 
 2. Downloading reference genome  
    * Navigate to NCBI and search for GenBank accession `KJ660346.2` and download fasta file  
+
     `$ mkdir -p ~/variant_calling/data/ref_genome`  
+    `$ mv ~/Downloads/sequence.fasta ~/variant_calling/data/ref_genome/KJ660346.2.fasta`  
     `$ cd ~/variant_calling/data/ref_genome`  
 
 3. Create directories for the results that will be generated as part of this workflow    
