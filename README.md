@@ -116,6 +116,8 @@ application/gzip
    * The .zip file extension indicates that this is actually a compressed set of multiple output files   
    * The .html file is a stable webpage displaying the summary report for each of our samples  
    * We want to keep our data files and our results files separate, so we will move these output files into a new directory within our results/ directory  
+    
+    `$ cd ~/variant_calling`  
     `$ mkdir results/fastqc_untrimmed_reads`  
     `$ mv *.zip results/fastqc_untrimmed_reads`  
     `$ mv *.html results/fastqc_untrimmed_reads`  
