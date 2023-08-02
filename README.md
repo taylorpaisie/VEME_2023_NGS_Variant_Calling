@@ -176,33 +176,34 @@ $ trimmomatic`
 1. Running Trimmomatic:  
    
     * Move to the correct directory with untrimmed fastq files we downloaded:  
+    `$ cd ~/variant_calling/data/untrimmed_fastq` 
 
-    `$ cd ~/variant_calling/data/untrimmed_fastq`  
+    * Copy Illumina adapters from Trimmomatic into working directory:  
+    `$ cp /usr/local/share/Trimmomatic-main/adapters/NexteraPE-PE.fa .`  
 
     * Run Trimmomatic:  
-  
-    `$ trimmomatic PE SRR1972917_1.fastq.gz  SRR1972917_2.fastq.gz \`  
-    `SRR1972917_1.trim.fastq.gz SRR1972917_1un.trim.fastq.gz \`  
-    `SRR1972917_2.trim.fastq.gz SRR1972917_2un.trim.fastq.gz \`  
-    `SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15`  
+    ```
+    java -jar /usr/local/share/Trimmomatic-main/dist/jar/trimmomatic-0.40-rc1.jar PE SRR1972917_1.fastq.gz SRR1972917_2.fastq.gz SRR1972917_1.trim.fastq.gz SRR1972917_1un.trim.fastq.gz SRR1972917_2.trim.fastq.gz SRR1972917_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
 
+    ```
+    
     * Output:  
 
-```
-TrimmomaticPE: Started with arguments:
-SRR1972917_1.fastq.gz SRR1972917_2.fastq.gz SRR1972917_1.trim.fastq.gz SRR1972917_1un.trim.fastq.gz SRR1972917_2.trim.fastq.gz SRR1972917_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
-Multiple cores found: Using 4 threads
-Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
-Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
-Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
-Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
-Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
-ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
-Quality encoding detected as phred33
-Input Read Pairs: 4377867 Both Surviving: 1241328 (28.35%) Forward Only Surviving: 2133670 (48.74%) Reverse Only Surviving: 18680 (0.43%) Dropped: 984189 (22.48%)
-TrimmomaticPE: Completed successfully
+    ```
+    TrimmomaticPE: Started with arguments:
+    SRR1972917_1.fastq.gz SRR1972917_2.fastq.gz SRR1972917_1.trim.fastq.gz SRR1972917_1un.trim.fastq.gz SRR1972917_2.trim.fastq.gz SRR1972917_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
+    Multiple cores found: Using 4 threads
+    Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
+    Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
+    Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
+    Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
+    Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
+    ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+    Quality encoding detected as phred33
+    Input Read Pairs: 4377867 Both Surviving: 1241328 (28.35%) Forward Only Surviving: 2133670 (48.74%) Reverse Only Surviving: 18680 (0.43%) Dropped: 984189 (22.48%)
+    TrimmomaticPE: Completed successfully
 
-```
+    ```
 
 
    * List out files created by Trimmomatic:  
@@ -210,13 +211,13 @@ TrimmomaticPE: Completed successfully
 
    * Trimmed files should be smaller in size than our untrimmed fastq files
   
-1. Running a for loop on all fastq files  
+2. Running a for loop on all fastq files  
 
 ```
 $ for infile in *_1.fastq.gz
     do
         base=$(basename ${infile} _1.fastq.gz)
-        trimmomatic PE ${infile} ${base}_2.fastq.gz \  
+        java -jar /usr/local/share/Trimmomatic-main/dist/jar/trimmomatic-0.40-rc1.jar PE ${infile} ${base}_2.fastq.gz \  
         ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz \  
         ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz \  
         SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15   
@@ -226,7 +227,7 @@ $ for infile in *_1.fastq.gz
 
 
 
-1. Moving trimmed fastq files to a new directory:
+3. Moving trimmed fastq files to a new directory:
     * We have now completed the trimming and filtering steps of our quality control process! Before we move on, let’s move our trimmed FASTQ files to a new subdirectory within our data/ directory  
   
     `$ cd data/untrimmed_fastq`  
@@ -235,7 +236,7 @@ $ for infile in *_1.fastq.gz
     `$ cd ../trimmed_fastq`  
     `$ ls -al`  
 
-2. Lets rerun FastQC on the trimmed fastq files  
+4. Lets rerun FastQC on the trimmed fastq files  
     `$ fastq *trim.fastq.gz`
 
 
