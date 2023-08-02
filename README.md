@@ -174,6 +174,13 @@ $ trimmomatic`
      * TOPHRED64: Convert quality scores to Phred-64  
 
 1. Running Trimmomatic:  
+   
+    * Move to the correct directory with untrimmed fastq files we downloaded:  
+
+    `$ cd ~/variant_calling/data/untrimmed_fastq`  
+
+    * Run Trimmomatic:  
+  
     `$ trimmomatic PE SRR1972917_1.fastq.gz  SRR1972917_2.fastq.gz \`  
     `SRR1972917_1.trim.fastq.gz SRR1972917_1un.trim.fastq.gz \`  
     `SRR1972917_2.trim.fastq.gz SRR1972917_2un.trim.fastq.gz \`  
