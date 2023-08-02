@@ -230,10 +230,10 @@ $ for infile in *_1.fastq.gz
 3. Moving trimmed fastq files to a new directory:
     * We have now completed the trimming and filtering steps of our quality control process! Before we move on, let’s move our trimmed FASTQ files to a new subdirectory within our data/ directory  
   
-    `$ cd data/untrimmed_fastq`  
-    `$ mkdir -p ../trimmed_fastq`  
-    `$ mv *trim* ../trimmed_fastq`  
-    `$ cd ../trimmed_fastq`  
+    `$ cd ~/variant_calling/data/untrimmed_fastq`  
+    `$ mkdir -p ~/variant_calling/data/trimmed_fastq`  
+    `$ mv *trim* ~/variant_calling/data/trimmed_fastq`  
+    `$ cd ~/variant_calling/data/trimmed_fastq`  
     `$ ls -al`  
 
 4. Lets rerun FastQC on the trimmed fastq files  
@@ -255,11 +255,12 @@ $ for infile in *_1.fastq.gz
 
 2. Downloading reference genome  
    * Navigate to NCBI and search for GenBank accession `KJ660346.2` and download fasta file  
-    `$ mkdir -p data/ref_genome`  
-    `$ cd data/ref_genome`  
+    `$ mkdir -p ~/variant_calling/data/ref_genome`  
+    `$ cd ~/variant_calling/data/ref_genome`  
 
 3. Create directories for the results that will be generated as part of this workflow    
     * We can do this in a single line of code, because mkdir can accept multiple new directory names as input  
+    `$ cd ~/variant_calling/`  
     `$ mkdir -p results/sam results/bam results/bcf results/vcf`  
 
 4. Index the reference genome  
@@ -267,7 +268,7 @@ $ for infile in *_1.fastq.gz
     * Indexing allows the aligner to quickly find potential alignment sites for query sequences in a genome, which saves time during alignment  
     * Indexing the reference only has to be run once  
     * The only reason you would want to create a new index is if you are working with a different reference genome or you are using a different tool for alignment  
-    `$ bwa index KJ660346.2.fasta`  
+    `$ bwa index data/ref_genome/KJ660346.2.fasta`  
 
 5. Align reads to the reference genome  
     * The alignment process consists of choosing an appropriate reference genome to map our reads against and then deciding on an aligner  
