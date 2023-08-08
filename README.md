@@ -423,14 +423,12 @@ $ for infile in *_1.fastq.gz
 #### We can extend these principles to the entire variant calling workflow. 
 #### To do this, we will take all of the individual commands that we wrote before, put them into a single file, add variables so that the script knows to iterate through our input files and write to the appropriate output files
 
-#### Download automated variant calling script:
+#### Make a directory for automated variant calling script:
 
 `$ mkdir scripts`  
 `$ cd scripts/`  
-`$ curl -O https://datacarpentry.org/wrangling-genomics/files/run_variant_calling.sh` 
+`$ touch run_variant_calling.sh`  
 
-#### Let's view the bash script we just downloaded:  
-`$ less run_variant_calling.sh`  
 
 
 #### Our variant calling workflow has the following steps:  
@@ -442,33 +440,33 @@ $ for infile in *_1.fastq.gz
 6. Filter and report the SNVs in VCF  
 
 
-#### Script should look like this:  
+#### Let's write our script, which should look like this:  
 
 ```
 set -e
-cd ~/dc_workshop/results
+cd ~/variant_calling/results
 
-genome=~/dc_workshop/data/ref_genome/ecoli_rel606.fasta
+genome=~/variant_calling/data/ref_genome/KJ660346.2.fasta
 
 bwa index $genome
 
 mkdir -p sam bam bcf vcf
 
-for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
+for fq1 in ../data/trimmed_fastq/*_1.trim.fastq.gz
     do
     echo "working with file $fq1"
 
-    base=$(basename $fq1 _1.trim.sub.fastq)
+    base=$(basename $fq1 _1.trim.fastq.gz)
     echo "base name is $base"
 
-    fq1=~/dc_workshop/data/trimmed_fastq_small/${base}_1.trim.sub.fastq
-    fq2=~/dc_workshop/data/trimmed_fastq_small/${base}_2.trim.sub.fastq
-    sam=~/dc_workshop/results/sam/${base}.aligned.sam
-    bam=~/dc_workshop/results/bam/${base}.aligned.bam
-    sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
-    raw_bcf=~/dc_workshop/results/bcf/${base}_raw.bcf
-    variants=~/dc_workshop/results/vcf/${base}_variants.vcf
-    final_variants=~/dc_workshop/results/vcf/${base}_final_variants.vcf 
+    fq1=~/variant_calling/data/trimmed_fastq/${base}_1.trim.fastq.gz
+    fq2=~/variant_calling/data/trimmed_fastq/${base}_2.trim.fastq.gz
+    sam=~/variant_calling/results/sam/${base}.aligned.sam
+    bam=~/variant_calling/results/bam/${base}.aligned.bam
+    sorted_bam=~/variant_calling/results/bam/${base}.aligned.sorted.bam
+    raw_bcf=~/variant_calling/results/bcf/${base}_raw.bcf
+    variants=~/variant_calling/results/vcf/${base}_variants.vcf
+    final_variants=~/variant_calling/results/vcf/${base}_final_variants.vcf 
 
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
@@ -480,6 +478,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
    
     done
 ```
+ 
 
 #### We change our working directory so that we can create new results subdirectories in the right location  
 
@@ -503,7 +502,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
 * The first thing we do is assign the name of the FASTQ file we are currently working with to a variable called fq1 and tell the script to echo the filename back to us so we can check which file we are on  
 
 ```
-for fq1 in ../data/trimmed_fastq/*_1.trim.fastq.gz
+for fq1 in ~/variant_calling/data/trimmed_fastq/*_1.trim.fastq.gz
     do
     echo "working with file $fq1"
 ```  
@@ -520,16 +519,16 @@ echo "base name is $base"
 
 ```
 # input fastq files
-fq1=../data/trimmed_fastq/${base}_1.trim.fastq.gz
-fq2=../data/trimmed_fastq/${base}_2.trim.fastq.gz
+fq1=~/variant_calling/data/trimmed_fastq/${base}_1.trim.fastq.gz
+fq2=~/variant_calling/data/trimmed_fastq/${base}_2.trim.fastq.gz
     
 # output files
-sam=sam/${base}.aligned.sam
-bam=bam/${base}.aligned.bam
-sorted_bam=bam/${base}.aligned.sorted.bam
-raw_bcf=bcf/${base}_raw.bcf
-variants=bcf/${base}_variants.vcf
-final_variants=vcf/${base}_final_variants.vcf    
+sam=~/variant_calling/results/sam/${base}.aligned.sam
+bam=~/variant_calling/results/bam/${base}.aligned.bam
+sorted_bam=~/variant_calling/results/bam/${base}.aligned.sorted.bam
+raw_bcf=~/variant_calling/results/bcf/${base}_raw.bcf
+variants=~/variant_calling/results/vcf/${base}_variants.vcf
+final_variants=~/variant_calling/results/vcf/${base}_final_variants.vcf   
 ```
 
 #### Now to the actual steps of the workflow:
