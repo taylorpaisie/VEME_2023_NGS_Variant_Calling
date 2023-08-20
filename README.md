@@ -3,10 +3,18 @@
 ## Taylor K. Paisie
 ### `https://taylorpaisie.github.io/VEME_NGS_Variant_Calling/`
 
+
 #### Directory visualization
 <figure>
     <img src="variant_calling_Graph.svg" width="400" height="300">
     <figcaption>How the structure of our directories should look</figcaption>
+</figure>
+
+
+#### Command line cheat sheet
+<figure>
+    <img src="command-line-cheat-sheet-large.png" height="800">
+    <figcaption>Variant Calling Workflow</figcaption>
 </figure>
 
 ### 1. Background and Metadata
