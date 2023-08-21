@@ -380,7 +380,7 @@ $ for infile in *_1.fastq.gz
     4. Do the same with our VCF file (SRR1972917_final_variants.vcf)  
 
     <figure>
-    <img src="igv_picture.png" width="500" height="300">
+    <img src="igv_picture.png" width="700">
     </figure>
 
 
