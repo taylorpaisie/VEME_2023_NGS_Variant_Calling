@@ -1,7 +1,7 @@
 # VEME 2023 NGS Variant Calling Tutorial
 
 ## Taylor K. Paisie
-### `https://taylorpaisie.github.io/VEME_NGS_Variant_Calling/`
+### `https://taylorpaisie.github.io/VEME_2023_NGS_Variant_Calling/`
 
 
 #### Directory visualization
