@@ -7,7 +7,7 @@
 #### Directory visualization
 <figure>
     <img src="variant_calling_directories.svg" width="400">
-    <figcaption>Structure of our directories for the variant calling tutorial</figcaption>
+    <figcaption>Structure of the directories for the variant calling tutorial</figcaption>
 </figure>
 
 
