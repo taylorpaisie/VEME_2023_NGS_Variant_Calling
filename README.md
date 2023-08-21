@@ -6,8 +6,8 @@
 
 #### Directory visualization
 <figure>
-    <img src="variant_calling_Graph.svg" width="400" height="300">
-    <figcaption>How the structure of our directories should look</figcaption>
+    <img src="variant_calling_directories.svg" width="400">
+    <figcaption>Structure of our directories for the variant calling tutorial</figcaption>
 </figure>
 
 
