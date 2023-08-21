@@ -451,6 +451,8 @@ $ for infile in *_1.fastq.gz
 #### Let's write our script, which should look like this:  
 
 ```
+#! bin/bash/
+
 set -e
 cd ~/variant_calling/results
 
@@ -458,9 +460,10 @@ genome=~/variant_calling/data/ref_genome/KJ660346.2.fasta
 
 bwa index $genome
 
-mkdir -p sam bam bcf vcf
+# makes directories (should already be made)
+# mkdir -p sam bam bcf vcf
 
-for fq1 in ../data/trimmed_fastq/*_1.trim.fastq.gz
+for fq1 in ~/variant_calling/data/trimmed_fastq/*_1.trim.fastq.gz
     do
     echo "working with file $fq1"
 
@@ -473,12 +476,12 @@ for fq1 in ../data/trimmed_fastq/*_1.trim.fastq.gz
     bam=~/variant_calling/results/bam/${base}.aligned.bam
     sorted_bam=~/variant_calling/results/bam/${base}.aligned.sorted.bam
     raw_bcf=~/variant_calling/results/bcf/${base}_raw.bcf
-    variants=~/variant_calling/results/vcf/${base}_variants.vcf
+    variants=~/variant_calling/results/bcf/${base}_variants.vcf
     final_variants=~/variant_calling/results/vcf/${base}_final_variants.vcf 
 
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
-    samtools sort -o $sorted_bam $bam
+    samtools sort -o $sorted_bam $bam 
     samtools index $sorted_bam
     bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam
     bcftools call --ploidy 1 -m -v -o $variants $raw_bcf 
@@ -490,11 +493,11 @@ for fq1 in ../data/trimmed_fastq/*_1.trim.fastq.gz
 
 #### We change our working directory so that we can create new results subdirectories in the right location  
 
-`$ cd ../results`   
+`$ cd ~/variant_calling/results`   
 
 #### Next we tell our script where to find the reference genome by assigning the genome variable to the path to our reference genome:  
 
-`$ genome=../data/ref_genome/KJ660346.2.fasta`  
+`$ genome=~/variant_calling/data/ref_genome/KJ660346.2.fasta`  
 
 #### Now we want to index the reference genome for BWA:
 
@@ -518,25 +521,25 @@ for fq1 in ~/variant_calling/data/trimmed_fastq/*_1.trim.fastq.gz
 * We then extract the base name of the file (excluding the path and .fastq.gz extension) and assign it to a new variable called base  
 
 ```
-base=$(basename $fq1 _1.trim.fastq.gz)
-echo "base name is $base"
+    base=$(basename $fq1 _1.trim.fastq.gz)
+    echo "base name is $base"
 ```
 
 * We can use the base variable to access both the base_1.fastq.gz and base_2.fastq.gz input files, and create variables to store the names of our output files   
 * This makes the script easier to read because we do not need to type out the full name of each of the files: instead, we use the base variable, but add a different extension (e.g. .sam, .bam) for each file produced by our workflow  
 
 ```
-# input fastq files
-fq1=~/variant_calling/data/trimmed_fastq/${base}_1.trim.fastq.gz
-fq2=~/variant_calling/data/trimmed_fastq/${base}_2.trim.fastq.gz
-    
-# output files
-sam=~/variant_calling/results/sam/${base}.aligned.sam
-bam=~/variant_calling/results/bam/${base}.aligned.bam
-sorted_bam=~/variant_calling/results/bam/${base}.aligned.sorted.bam
-raw_bcf=~/variant_calling/results/bcf/${base}_raw.bcf
-variants=~/variant_calling/results/vcf/${base}_variants.vcf
-final_variants=~/variant_calling/results/vcf/${base}_final_variants.vcf   
+    # input fastq files
+    fq1=~/variant_calling/data/trimmed_fastq/${base}_1.trim.fastq.gz
+    fq2=~/variant_calling/data/trimmed_fastq/${base}_2.trim.fastq.gz
+        
+    # output files
+    sam=~/variant_calling/results/sam/${base}.aligned.sam
+    bam=~/variant_calling/results/bam/${base}.aligned.bam
+    sorted_bam=~/variant_calling/results/bam/${base}.aligned.sorted.bam
+    raw_bcf=~/variant_calling/results/bcf/${base}_raw.bcf
+    variants=~/variant_calling/results/vcf/${base}_variants.vcf
+    final_variants=~/variant_calling/results/vcf/${base}_final_variants.vcf   
 ```
 
 #### Now to the actual steps of the workflow:
