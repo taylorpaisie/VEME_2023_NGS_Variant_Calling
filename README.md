@@ -118,18 +118,18 @@ application/gzip
 ```
 
    * Lets now look at the files created by FastQC:  
-    `$ ls` 
+    `$ ls -al` 
 
    * For each input FASTQ file, FastQC has created a .zip file and a .html file  
    * The .zip file extension indicates that this is actually a compressed set of multiple output files   
    * The .html file is a stable webpage displaying the summary report for each of our samples  
    * We want to keep our data files and our results files separate, so we will move these output files into a new directory within our results/ directory  
     
-    `$ cd ~/variant_calling`  
-    `$ mkdir -p results/fastqc_untrimmed_reads`  
-    `$ mv ~/variant_calling/data/untrimmed_fastq/*.zip ~/variant_calling/results/fastqc_untrimmed_reads`  
-    `$ mv ~/variant_calling/data/untrimmed_fastq/*.html ~/variant_calling/results/fastqc_untrimmed_reads`  
-    `$ cd ~/variant_calling/results/fastqc_untrimmed_reads`  
+`$ cd ~/variant_calling`  
+`$ mkdir -p results/fastqc_untrimmed_reads`  
+`$ mv ~/variant_calling/data/untrimmed_fastq/*.zip ~/variant_calling/results/fastqc_untrimmed_reads`  
+`$ mv ~/variant_calling/data/untrimmed_fastq/*.html ~/variant_calling/results/fastqc_untrimmed_reads`  
+`$ cd ~/variant_calling/results/fastqc_untrimmed_reads`  
 
    * We can now open the .html file to view the FastQC results:  
 
@@ -529,7 +529,7 @@ for fq1 in ~/variant_calling/data/trimmed_fastq/*_1.trim.fastq.gz
 * This makes the script easier to read because we do not need to type out the full name of each of the files: instead, we use the base variable, but add a different extension (e.g. .sam, .bam) for each file produced by our workflow  
 
 ```
-    # input fastq files
+    .# input fastq files
     fq1=~/variant_calling/data/trimmed_fastq/${base}_1.trim.fastq.gz
     fq2=~/variant_calling/data/trimmed_fastq/${base}_2.trim.fastq.gz
         
