@@ -1,6 +1,10 @@
 # VEME 2023 NGS Variant Calling Tutorial
 
 ## Taylor K. Paisie
+### CDC - Bacterial Special Pathogens Branch (BSPB)
+### Email:  tpaisie91@gmail.com
+
+### Tutorial link:  
 ### `https://taylorpaisie.github.io/VEME_2023_NGS_Variant_Calling/`
 
 
@@ -371,8 +375,8 @@ $ for infile in *_1.fastq.gz
   
 3. Viewing with IGV
     #### IGV is a stand-alone browser, which has the advantage of being installed locally and providing fast access. Web-based genome browsers, like Ensembl or the UCSC browser, are slower, but provide more functionality  
-    * They not only allow for more polished and flexible visualization, but also provide easy access to a wealth of annotations and external data sources  
-    * This makes it straightforward to relate your data with information about repeat regions, known genes, epigenetic features or areas of cross-species conservation, to name just a few  
+    #### They not only allow for more polished and flexible visualization, but also provide easy access to a wealth of annotations and external data sources  
+    #### This makes it straightforward to relate your data with information about repeat regions, known genes, epigenetic features or areas of cross-species conservation, to name just a few  
   
     1. Open IGV  
     2. Load our reference genome file (KJ660346.2.fasta) into IGV using the “Load Genomes from File…” option under the “Genomes” pull-down menu  
